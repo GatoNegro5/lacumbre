@@ -1,12 +1,26 @@
 package com.ecommerce.model;
 
+import jakarta.persistence.Entity; 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "productos") //MAPEO
 public class Producto {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nombre;
 	private String descripcion;
-	Private String imagen;
+	private String imagen;
 	private double precio;
 	private int cantidad;
+	
+	@ManyToOne
+	private Usuario usuario; //variable utilizada para el MAPEO
 	
 	// Contructor sin parametros
 	public Producto() {
@@ -14,17 +28,19 @@ public class Producto {
 	}
 	
 	//Contructor con parametros
-	public Producto(Integer id, java.lang.String nombre, java.lang.String descripcion, Private string, double precio,
-			int cantidad) {
+	public Producto(Integer id, String nombre, String descripcion, String imagen, double precio, int cantidad,
+			Usuario usuario) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		String = string;
+		this.imagen = imagen;
 		this.precio = precio;
 		this.cantidad = cantidad;
+		this.usuario = usuario;
 	}
 
+	
 	//Setter & Getter
 	public Integer getId() {
 		return id;
@@ -50,12 +66,12 @@ public class Producto {
 		this.descripcion = descripcion;
 	}
 
-	public Private getString() {
-		return String;
+	public String getImagen() {
+		return imagen;
 	}
 
-	public void setString(Private string) {
-		String = string;
+	public void setImagen(String imagen) {
+		this.imagen = imagen;
 	}
 
 	public double getPrecio() {
@@ -74,13 +90,22 @@ public class Producto {
 		this.cantidad = cantidad;
 	}
 
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+
 	//Me retorna todos los campos de la clase como 1 solo String
 	@Override
 	public String toString() {
-		return "Producto [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", precio=" + precio
-				+ ", cantidad=" + cantidad + "]";
+		return "Producto [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", imagen=" + imagen
+				+ ", precio=" + precio + ", cantidad=" + cantidad + "]";
 	}
-	
+
 	
 		
 }
