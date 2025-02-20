@@ -11,6 +11,6 @@ public interface ProductoService {    //Ojo en la Interface SOLO se define los M
 	public Optional<Producto> get(Integer id) ;   //Este Metodo es de Tipo Producto, llamado get que recibira el Id que identifica al Producto
 	
 	public void update(Producto producto);  //Creo el Metodo de Actualizar y el parametro va el Objeto Producto
-	public void delete(Integer id)
+	public void delete(Integer id);
 	
 }

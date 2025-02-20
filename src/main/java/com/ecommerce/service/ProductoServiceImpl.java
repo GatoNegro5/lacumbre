@@ -12,7 +12,7 @@ import com.ecommerce.repository.ProductoRepository;
 @Service   
 public class ProductoServiceImpl implements ProductoService {  //Ctrl+Spac para poner Add Metodos de implementacion
 
-	//Para Inyectar a esta Clase un Objeto
+	//Para Inyectar a esta Clase un Objeto (REPOSITORIOS) q la usaremos en los metodos
 	@Autowired    
 	private ProductoRepository productoRepository;  //Declaramos el Objeto de tipo repository
 	
@@ -30,13 +30,11 @@ public class ProductoServiceImpl implements ProductoService {  //Ctrl+Spac para 
 	public void update(Producto producto) {
 		//Asi actua el metodo save... Si al Objeto le manda un Null... este lo va a crear. Si lo mandamos con un ID q existe en la BDD entoces lo Actualiza
 		productoRepository.save(producto);  //retornamos el Obj productoRepository de ProductoRepository vemos el producto q se hereda del metodo save
-		
 	}
 
 	@Override
 	public void delete(Integer id) {
-		productoRepository.deleteById(id);// invocamos al productoRepository y usamos el metodo de Borrado por Id (deleteById)
-		
+		productoRepository.deleteById(id);// invocamos al productoRepository y usamos el metodo de Borrado por Id (deleteById)		
 	}
 
 }
