@@ -3,6 +3,7 @@ package com.ecommerce.controller;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +27,13 @@ public class ProductoController {
 	
 	//Lo q haremos es crear un Metodo q redireccione hacia la vista q es "show.html"
 	@GetMapping("")
-	public String show() {
+	public String show(Model model) {   //Le pasamos un Objeto Model como parametro - Model lleva informacion de Prod desde el Backend hacia la Vista Show
+		model.addAttribute("productos", productoService.findAll());  //1er parametro lo q recibo (prod), 2do parametro la lista de Obj q tiene la Informacion
 		return "productos/show";
 	}
 	
 	@GetMapping("/create")
-	public String create() {
+	public String create() { 		
 		return "productos/create";
 	}
 	

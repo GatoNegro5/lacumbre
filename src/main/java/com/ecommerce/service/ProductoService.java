@@ -1,6 +1,7 @@
 package com.ecommerce.service;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.Optional; 
 
 import com.ecommerce.model.Producto;
 
@@ -12,5 +13,6 @@ public interface ProductoService {    //Ojo en la Interface SOLO se define los M
 	
 	public void update(Producto producto);  //Creo el Metodo de Actualizar y el parametro va el Objeto Producto
 	public void delete(Integer id);
+	public List<Producto> findAll();
 	
 }
