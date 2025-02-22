@@ -1,10 +1,13 @@
 package com.ecommerce.controller;
 
+import java.util.Optional;
+
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -49,6 +52,26 @@ public class ProductoController {
 		
 		//Y ahora guardo el contenido de la WEB de Productos
 		productoService.save(producto);
+		return "redirect:/productos";
+	}
+	
+	//Lleva a la nueva pagina Edit... Mapea toda la Informacion del Registro pero con el Id del Producto Seleccionado
+	@GetMapping("/edit/{id}")
+	public String edit(@PathVariable Integer id, Model model) {      //declaro una variable para recibir el parametro - PathVariable sirve para recibir un parametro
+		Producto producto = new Producto();
+		Optional<Producto> optionalProducto=productoService.get(id);     //Optional devuelve Objeto cuando hacemos la busqueda de un Objeto
+		producto = optionalProducto.get();     //Aqui me llaga el producto q mande a buscar
+		
+		//Testeamos q busque
+		LOGGER.info("Este es el objeto producto buscado {}", producto);
+		model.addAttribute("producto", producto);     //Nos va a enviar a la vista todo el Obj
+		return "productos/edit";  //Lleva a Pag.Edit
+	}
+	
+	//Al metodo va a responder una peticion de tipo POST con la terminacion URL update
+	@PostMapping("/update")
+	public String update(Producto producto) {   //recibe parametro un Obj tipo Prod.
+		productoService.update(producto);
 		return "redirect:/productos";
 	}
 }
