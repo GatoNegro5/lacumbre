@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ecommerce.model.Producto;
 import com.ecommerce.model.Usuario;
 import com.ecommerce.service.ProductoService;
+import com.ecommerce.service.UploadFileService;
 
 @Controller
 //Mapeados por Productos
@@ -27,6 +29,9 @@ public class ProductoController {
 	@Autowired
 	private ProductoService productoService;
 	
+	//Creo un Obj tipo upload, q la inyectaremos con Autowired a la Clase Producto
+	@Autowired
+	private UploadFileService upload;
 	
 	//Lo q haremos es crear un Metodo q redireccione hacia la vista q es "show.html"
 	@GetMapping("")
@@ -40,9 +45,10 @@ public class ProductoController {
 		return "productos/create";
 	}
 	
-	//Creo metodo q Mapea con el nombre de save la Informacion desde el boton Guardar Planes de Servicio 
+	//Creo metodo q Mapea con el nombre de save la Informacion desde el boton Guardar los Planes de Servicio 
 	@PostMapping("/save")
-	public String save(Producto producto) {    //recibira un Objeto Producto de la Clase
+	//Parametros: recibe un Obj Prod de la Clase y Recibe con la Notacion name=img del create.html nombre de la Imagen
+	public String save(Producto producto, @RequestParam("img") MultipartFile File)  throws IOException {    
 		//primero hago el test en consola
 		LOGGER.info("Este es el objeto producto {}", producto);  //{} Va dentro el Objeto que viene del ToString
 		
@@ -50,7 +56,28 @@ public class ProductoController {
 		Usuario u = new Usuario(1,"","","","","","",""); 
 		producto.setUsuario(u);
 		
-		//Y ahora guardo el contenido de la WEB de Productos
+		//Guardo el nombre de la imagen en la BDD, pero si es cargada por 1era vez (id=1)
+		if(producto.getId()==null) {  //condicion cuando se crea un producto
+			String nombreImagen = upload.saveImage(file); //Esta variable file viene desde el @RequestParam con el nombre de la imagen
+			producto.setImagen(nombreImagen);  //aqui se guardara el Obj.Prod q viene de ProdController"save" en la BDD
+		}else {
+			//cuando se modifica un Prod y pero va la misma Imagen
+			if(file.isEmpty()) {  //Modifico el Prod... pero le cargo la misma Imagen q tenia
+				Producto p = new Producto();   //1.definimos un Obj.tipo Prod.
+				//Buscamos nuestro Producto del ProdService
+				p = ProductoService.get(producto.getId()).get();  //2.Obtenemos la Imagen que tenia
+				producto.setImagen(p.getImagen());   //3.Nuevamente lo pasamos al Prod. q estamos editando
+				
+			}else {
+				//cuando se modifica un Prod y Si se cambia Imagen por Otra
+				String nombreImagen = upload.saveImage(file); //Esta variable file viene desde el @RequestParam con el nombre de la imagen
+				producto.setImagen(nombreImagen);  //aqui se guardara el Obj.Prod q viene de ProdController"save" en la BDD
+			}
+			
+		}
+				
+		
+		//Y ahora guardo el contenido de la WEB de Productos en la BDD
 		productoService.save(producto);
 		return "redirect:/productos";
 	}
