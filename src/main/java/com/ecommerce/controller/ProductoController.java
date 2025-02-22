@@ -74,4 +74,11 @@ public class ProductoController {
 		productoService.update(producto);
 		return "redirect:/productos";
 	}
+	
+	//Este metodo responde a una peticion GetMapping con un id que me permitirá Mapear el Reg a Eliminar
+	@GetMapping("/delete/{id}")
+	public String delete(@PathVariable Integer id) {      //declaro una variable para recibir el parametro - PathVariable sirve para recibir un parametro
+		productoService.delete(id);
+		return "redirect:/productos";
+	}
 }
