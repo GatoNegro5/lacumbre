@@ -1,6 +1,7 @@
 package com.ecommerce.controller;
 
-import java.util.Optional;
+import java.io.IOException;
+import java.util.Optional; 
 
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.model.Producto;
 import com.ecommerce.model.Usuario;
 import com.ecommerce.service.ProductoService;
 import com.ecommerce.service.UploadFileService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 //Mapeados por Productos
@@ -48,7 +52,7 @@ public class ProductoController {
 	//Creo metodo q Mapea con el nombre de save la Informacion desde el boton Guardar los Planes de Servicio 
 	@PostMapping("/save")
 	//Parametros: recibe un Obj Prod de la Clase y Recibe con la Notacion name=img del create.html nombre de la Imagen
-	public String save(Producto producto, @RequestParam("img") MultipartFile File)  throws IOException {    
+	public String save(Producto producto, @RequestParam("img") MultipartFile file, HttpSession session) throws IOException {    
 		//primero hago el test en consola
 		LOGGER.info("Este es el objeto producto {}", producto);  //{} Va dentro el Objeto que viene del ToString
 		
@@ -60,22 +64,7 @@ public class ProductoController {
 		if(producto.getId()==null) {  //condicion cuando se crea un producto
 			String nombreImagen = upload.saveImage(file); //Esta variable file viene desde el @RequestParam con el nombre de la imagen
 			producto.setImagen(nombreImagen);  //aqui se guardara el Obj.Prod q viene de ProdController"save" en la BDD
-		}else {
-			//cuando se modifica un Prod y pero va la misma Imagen
-			if(file.isEmpty()) {  //Modifico el Prod... pero le cargo la misma Imagen q tenia
-				Producto p = new Producto();   //1.definimos un Obj.tipo Prod.
-				//Buscamos nuestro Producto del ProdService
-				p = ProductoService.get(producto.getId()).get();  //2.Obtenemos la Imagen que tenia
-				producto.setImagen(p.getImagen());   //3.Nuevamente lo pasamos al Prod. q estamos editando
-				
-			}else {
-				//cuando se modifica un Prod y Si se cambia Imagen por Otra
-				String nombreImagen = upload.saveImage(file); //Esta variable file viene desde el @RequestParam con el nombre de la imagen
-				producto.setImagen(nombreImagen);  //aqui se guardara el Obj.Prod q viene de ProdController"save" en la BDD
-			}
-			
-		}
-				
+		}		
 		
 		//Y ahora guardo el contenido de la WEB de Productos en la BDD
 		productoService.save(producto);
@@ -97,14 +86,40 @@ public class ProductoController {
 	
 	//Al metodo va a responder una peticion de tipo POST con la terminacion URL update
 	@PostMapping("/update")
-	public String update(Producto producto) {   //recibe parametro un Obj tipo Prod.
-		productoService.update(producto);
+	public String update(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
+		Producto p = new Producto();   //1.definimos un Obj.tipo Prod.
+		p = productoService.get(producto.getId()).get();  //2.Obtenemos la Imagen que tenia del ProdService
+		
+		
+		//cuando se modifica un Prod y pero va la misma Imagen
+		if(file.isEmpty()) {  //Modifico el Prod... pero le cargo la misma Imagen q tenia
+			
+			producto.setImagen(p.getImagen());   //3.Nuevamente lo pasamos al Prod. q estamos editando
+			
+		}else {
+			if (!p.getImagen().equals("default.jpg")) {
+				upload.deleteImage(p.getImagen());
+			}
+			//cuando se modifica un Prod y Si se cambia Imagen por Otra
+			String nombreImagen = upload.saveImage(file); //Esta variable file viene desde el @RequestParam con el nombre de la imagen
+			producto.setImagen(nombreImagen);  //aqui se guardara el Obj.Prod q viene de ProdController"save" en la BDD
+		}
+		producto.setUsuario(p.getUsuario());
+		productoService.update(producto);		
 		return "redirect:/productos";
 	}
 	
 	//Este metodo responde a una peticion GetMapping con un id que me permitirá Mapear el Reg a Eliminar
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable Integer id) {      //declaro una variable para recibir el parametro - PathVariable sirve para recibir un parametro
+		Producto p = new Producto();
+		p=productoService.get(id).get();
+		
+		//eliminar cuando no sea la imagen por defecto
+		if (!p.getImagen().equals("default.jpg")) {
+			upload.deleteImage(p.getImagen());
+		}
+		
 		productoService.delete(id);
 		return "redirect:/productos";
 	}

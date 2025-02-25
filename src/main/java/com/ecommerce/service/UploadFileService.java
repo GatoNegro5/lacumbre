@@ -23,7 +23,7 @@ public class UploadFileService {
 			//paso la imagen
 			Files.write(path, bytes);
 			//Retorno el nombre de mi imagen q he subido
-			return file.getOriginalFilename()
+			return file.getOriginalFilename();
 		}
 		return "default.jpg";
 	}
