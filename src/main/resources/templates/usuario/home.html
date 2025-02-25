@@ -12,18 +12,17 @@
  
 
     <!-- Bootstrap core CSS - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
-    <link th:href="@{vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 
     <!-- Custom styles for this template - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
-    <link th:href="@{css/heroic-features.css}" rel="stylesheet">
+    <link th:href="@{/css/heroic-features.css}" rel="stylesheet">
 
 </head>
 
 <body>
 
   <!-- Navigation - Aqui pondremos el HEADER de Template_usuario.html-->
-  <div th:include="usuario/template_usuario.html::header">
-	
+  <div th:include="usuario/template_usuario.html::header">	
   </div>
 
     <!-- Page Content -->
@@ -45,7 +44,7 @@
 		              <p class="card-text" th:text="${producto.nombre}"></p>
 		            </div>
 		            <div class="card-footer">
-		              <a href="productohome.html" class="btn btn-success">Ver Plan de Servicio</a>
+		              <a th:href="@{/productohome/{id} (id=${producto.id})}" class="btn btn-success">Ver Plan de Servicio</a>
 		            </div>
 		          </div>
 		        </div>
@@ -56,14 +55,12 @@
     <!-- /.container -->
 
     <!-- Footer aqui pondremos el FOOTER de Template_usuario.html-->
-	  <div th:include="usuario/template_usuario.html::footer">
-		
-	  </div>
-
+	<div th:include="usuario/template_usuario.html::footer">	
+	</div>
 
 	<!-- Bootstrap core JavaScript - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
-	   <script th:src="@{vendor/jquery/jquery.min.js}"></script>
-	   <script th:src="@{vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	   <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+	   <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
   </body>
 
