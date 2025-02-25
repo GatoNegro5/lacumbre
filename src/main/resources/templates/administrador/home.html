@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   <title>LaCumbre eCommerce</title>
-
+  <!--ADMINISTRADOR-->
 
   <!-- Bootstrap core CSS - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
   <link th:href="@{vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
@@ -33,7 +33,7 @@
         <p class="lead">Tu tienda de Servicios en Línea</p>
       </header>
 
-      <!-- Page Features -->
+      <!-- Pagina de Detalle de Productos.. Ojo se renderiza segun el numro de Productos de la BDD -->
       <div class="row text-center">
 
         <div class="col-lg-3 col-md-6 mb-4" th:each="producto: ${productos}">
