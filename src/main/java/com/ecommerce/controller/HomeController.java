@@ -1,5 +1,7 @@
 package com.ecommerce.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.management.AttributeValueExp;
@@ -13,7 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ecommerce.model.DetalleOrden;
+import com.ecommerce.model.Orden;
 import com.ecommerce.model.Producto;
 import com.ecommerce.service.ProductoService;
 
@@ -29,6 +34,10 @@ public class HomeController {
 	//Variable q me permita obtener los Productos. Autowired inyecte una instacia de Clase en el contenedor del framework
 	@Autowired
 	private ProductoService productoService;
+	
+	//Creo 2 variables: 1. para almacenar los Detalles de las Ordenes y 2. Los Datos de la Orden de Compra q vienen del carrito de compras
+	List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
+	Orden orden = new Orden();  //Importo el Model para q no de error
 	
 	@GetMapping("")
 	public String home(Model model ) {    //Model lleva al informacion de los Prod a la Vista
@@ -51,7 +60,18 @@ public class HomeController {
 	
 	//Creo el Metodo para el Carrito de Compras - Petición q se va a mapear a una Petición de tipo POS. La URL sera uan CADENA
 	@PostMapping("/cart")
-	public String addCart() {
+	public String addCart(@RequestParam Integer id, @RequestParam Integer cantidad) {   //con esto puedo ir a la BDD del Prod y anadirlo al carrito de compras 
+		//creo 2 variables de Datalle y datos de la Orden
+		DetalleOrden detalleOrden = new DetalleOrden();
+		Producto producto = new Producto();
+		double sumaTotal=0;  //guarda la suma de todos los productos escogidos
+		
+		
+		//buscaremos el Producto a traves del Optional y lo vemos en Consola
+		Optional<Producto> optionalProducto = productoService.get(id);
+		log.info("Producto añadido: {}", optionalProducto.get());
+		log.info("Cantidad: {}", cantidad);
+		
 		return "usuario/carrito";
 	}
 	

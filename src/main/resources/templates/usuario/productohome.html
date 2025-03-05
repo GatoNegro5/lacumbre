@@ -46,8 +46,11 @@
               </a>
             </div>
             <div class="col-lg-6">
-				<!--Apunto al HomeController llama a metodo q traera el Id del Prod y la Cantidad-->
+			  <!--Apunto al HomeController q llama a metodo q administra los datos de la Vista del Carrito-->
               <form th:action="@{/cart}" method="POST">
+				<!--Creo un Campo OCULTO con la etiqueta Input q traera el Id del Prod y la Cantidad de la BDD-->
+				<input type="hidden" th:value="${producto.id}" name="id">
+					
                 <h2 class="card-title" th:text="${producto.nombre}"> </h2>
 
                 <ul class="list-group">
