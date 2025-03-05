@@ -21,8 +21,7 @@
 
 <body>
   <!-- Navigation - Aqui pondremos el HEADER de Template_usuario.html-->
-    <div th:include="usuario/template_usuario.html::header">  	
-    </div>
+    <div th:include="usuario/template_usuario.html::header"></div>
 
     <!-- Page Content -->
     <div class="container">
@@ -47,7 +46,8 @@
               </a>
             </div>
             <div class="col-lg-6">
-              <form action="carrito.html" method="POST">
+				<!--Apunto al HomeController llama a metodo q traera el Id del Prod y la Cantidad-->
+              <form th:action="@{/cart}" method="POST">
                 <h2 class="card-title" th:text="${producto.nombre}"> </h2>
 
                 <ul class="list-group">
@@ -72,8 +72,7 @@
     <!-- /.container -->
 
 	<!-- Footer aqui pondremos el FOOTER de Template_usuario.html-->
-		<div th:include="usuario/template_usuario.html::footer">		
-		</div>
+		<div th:include="usuario/template_usuario.html::footer"></div>
 
 		<!-- Bootstrap core JavaScript - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
 		   <script th:src="@{/vendor/jquery/jquery.min.js}"></script>

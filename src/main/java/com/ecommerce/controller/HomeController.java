@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ecommerce.model.Producto;
@@ -47,4 +48,11 @@ public class HomeController {
 		
 		return "usuario/productoHome";
 	}
+	
+	//Creo el Metodo para el Carrito de Compras - Petición q se va a mapear a una Petición de tipo POS. La URL sera uan CADENA
+	@PostMapping("/cart")
+	public String addCart() {
+		return "usuario/carrito";
+	}
+	
 }
