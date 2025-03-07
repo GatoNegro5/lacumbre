@@ -59,8 +59,8 @@ public class HomeController {
 		return "usuario/productoHome";
 	}
 
-	// Creo el Metodo para el Carrito de Compras - Petición q se va a mapear a una
-	// Petición de tipo POS. La URL sera uan CADENA
+	// Creo Método q agrega el Prod escogido para COMPRARLO y lo lista en la Página del Carrito de Compras 
+	// Esta Petición q se va a mapear a una Petición de tipo POS. La URL será una CADENA q coincide con la del carrito.html
 	@PostMapping("/cart")
 	public String addCart(@RequestParam Integer id, @RequestParam Integer cantidad, Model model) {   //con esto puedo ir a la BDD del Prod y anadirlo al carrito de compras 
 		//creo 2 variables de Datalle y datos de la Orden
@@ -83,7 +83,14 @@ public class HomeController {
 		detalleOrden.setTotal(producto.getPrecio()*cantidad);
 		detalleOrden.setProducto(producto);     //viene el id
 		
-		detalles.add(detalleOrden);
+		//Validamos q el Prod no se añada 2 veces
+		Integer idProducto = producto.getId();
+		
+		//Los datos q están en el Carrito se encuentran en "detalles" donde vamos a preguntar con Lambda "->" si el id del New Prod ya se encuentra ahí, responderá True/False  
+		boolean ingresado=detalles.stream().anyMatch(p -> p.getProducto().getId()==idProducto);  //uso Método AnyMatch(alguna Coincidencia) y su predicado(va la busqueda)
+		if (!ingresado) {
+			detalles.add(detalleOrden);
+		}
 		
 		//Suma -el total a Pagar- de lo q vamos comprando y borrando Prod con una funcion dt q suma los totales q esten en esa lista 
 		sumaTotal = detalles.stream().mapToDouble(dt->dt.getTotal()).sum();
@@ -103,7 +110,7 @@ public class HomeController {
 		//lista nueva de productos
 		List<DetalleOrden> ordenesNueva = new ArrayList<DetalleOrden>();
 		for(DetalleOrden detalleOrden: detalles) {
-			if(detalleOrden.getProducto().getId() != id) {
+			if(detalleOrden.getProducto().getId() != id) {   //Hago un for nuevo descartando al señalado, no borro sino lo descarto
 				ordenesNueva.add(detalleOrden);
 			}
 		}
@@ -123,4 +130,13 @@ public class HomeController {
 		return "usuario/carrito";
 	}
 
-}
+	//Activamos la Opcion CARRITO del Menu de la Pagina
+	@GetMapping("/getCart")
+	public String getCart(Model model) {
+		//detalles(Lista de Productos) orden(valor a pagar) son Globales y sobreviven a toda la ejecucion de la aplicacion, solo paso la Inf a la VISTA del Carrito con Model
+		model.addAttribute("cart", detalles);
+		model.addAttribute("orden", orden);
+		
+		return "usuario/carrito";
+	}
+	
