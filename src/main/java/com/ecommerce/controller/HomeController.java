@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.ecommerce.model.DetalleOrden;
 import com.ecommerce.model.Orden;
 import com.ecommerce.model.Producto;
+import com.ecommerce.model.Usuario;
+import com.ecommerce.service.IUsuarioService;
 import com.ecommerce.service.ProductoService;
 
 @Controller
@@ -30,10 +32,13 @@ public class HomeController {
 	// Creamos LOGGER para ver en Console la informacion tambien y verificarla
 	private final Logger log = LoggerFactory.getLogger(HomeController.class);
 
-	// Variable q me permita obtener los Productos. Autowired inyecte una instacia
-	// de Clase en el contenedor del framework
+	// Autowired inyecte una instacia de Clase en el contenedor del framework
 	@Autowired
-	private ProductoService productoService;
+	private ProductoService productoService;  // Variable q me permita obtener los Productos.
+	
+	@Autowired
+	private IUsuarioService usuarioService;
+	
 
 	// Creo 2 variables: 1. para almacenar los Detalles de las Ordenes y 2. Los
 	// Datos de la Orden de Compra q vienen del carrito de compras
@@ -139,4 +144,21 @@ public class HomeController {
 		
 		return "usuario/carrito";
 	}
+	
+	//Activamos el Boton: VER ORDEN del Carrito
+	@GetMapping("/order")
+	public String order(Model model) {
+		
+		Usuario usuario = usuarioService.findById(1).get();   //Tomo 1 de la BDD hasta q agreguemos el ingreso de Usuarios... uso get para q retorne el Optional
+		model.addAttribute("usuario", usuario); //Traigo el Atributo Usuario a traves del Model
+		
+		model.addAttribute("cart", detalles);  //detalles del Prod escogidos
+		model.addAttribute("orden", orden);    //detalles de la Orden de los Prod Escogidos y Rechazados
+		
+		return "usuario/resumenorden";          //regresa al html
+	}
+	
+		
+	
+}
 	
