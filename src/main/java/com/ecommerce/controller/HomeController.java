@@ -85,7 +85,7 @@ public class HomeController {
 		
 		detalles.add(detalleOrden);
 		
-		//vamos almacenando -el total a Pagar- de lo q va comprando y rechazando con una funcion dt q suma los totales q esten en esa lista 
+		//Suma -el total a Pagar- de lo q vamos comprando y borrando Prod con una funcion dt q suma los totales q esten en esa lista 
 		sumaTotal = detalles.stream().mapToDouble(dt->dt.getTotal()).sum();
 		orden.setTotal(sumaTotal);
 		
@@ -93,6 +93,33 @@ public class HomeController {
 		model.addAttribute("cart", detalles);
 		model.addAttribute("orden", orden);
 		
+		return "usuario/carrito";
+	}
+	
+	//Quitar un Prod del Carrito
+	@GetMapping("/delete/cart/{id}")
+	public String deleteProductoCart(@PathVariable Integer id, Model model) {     //1.Decimo q va a mappearse a un entero id - Model envia la Inf de nuevo a Vista
+		
+		//lista nueva de productos
+		List<DetalleOrden> ordenesNueva = new ArrayList<DetalleOrden>();
+		for(DetalleOrden detalleOrden: detalles) {
+			if(detalleOrden.getProducto().getId() != id) {
+				ordenesNueva.add(detalleOrden);
+			}
+		}
+		
+		//poner la nueva lista de Productos restantes
+		detalles = ordenesNueva;
+		
+		//Suma -el total a Pagar- de lo q queda de las compras con una funcion dt q suma los totales q esten en esa lista 
+		double sumaTotal = 0;
+		sumaTotal = detalles.stream().mapToDouble(dt->dt.getTotal()).sum();
+		orden.setTotal(sumaTotal);
+				
+		//paso Toda esta Inf a la VISTA del Carrito, mediante el Model
+		model.addAttribute("cart", detalles);
+		model.addAttribute("orden", orden);
+				
 		return "usuario/carrito";
 	}
 
