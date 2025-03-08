@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.model.Producto;
-import com.ecommerce.repository.ProductoRepository;
+import com.ecommerce.repository.IProductoRepository;
 
 //La Anotacion me permite INYECTAR esta Clase en el Controlador, para hacer el llamado a los metodos Crud
 @Service   
@@ -15,7 +15,7 @@ public class ProductoServiceImpl implements ProductoService {  //Ctrl+Spac para 
 
 	//Para Inyectar a esta Clase un Objeto (REPOSITORIOS) q la usaremos en los metodos
 	@Autowired    
-	private ProductoRepository productoRepository;  //Declaramos el Objeto de tipo repository
+	private IProductoRepository productoRepository;  //Declaramos el Objeto de tipo repository
 	
 	@Override
 	public Producto save(Producto producto) {
