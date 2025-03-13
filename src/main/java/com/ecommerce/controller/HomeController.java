@@ -1,6 +1,7 @@
 package com.ecommerce.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +22,13 @@ import com.ecommerce.model.DetalleOrden;
 import com.ecommerce.model.Orden;
 import com.ecommerce.model.Producto;
 import com.ecommerce.model.Usuario;
+import com.ecommerce.service.IDetalleOrdenService;
+import com.ecommerce.service.IOrdenService;
 import com.ecommerce.service.IUsuarioService;
 import com.ecommerce.service.ProductoService;
 
 @Controller
-//Cuando vaya a la Raiz del Proyecto, este controlador me va a Mapear los metodos que esten aqui  
+//Cuando vaya a la Raiz del Proyecto, este controlador me va a Mapear los metodos que esten aqui  (BACKEND)
 @RequestMapping("/")
 public class HomeController {
 
@@ -38,6 +41,12 @@ public class HomeController {
 	
 	@Autowired
 	private IUsuarioService usuarioService;
+	
+	//Creo 2 Objetos q contendra los datos de la Orden para guardarla/persistirla en la BDD
+	@Autowired
+	private IOrdenService ordenService;
+	@Autowired
+	private IDetalleOrdenService detalleOrdenService;
 	
 
 	// Creo 2 variables: 1. para almacenar los Detalles de las Ordenes y 2. Los
@@ -159,6 +168,29 @@ public class HomeController {
 	}
 	
 		
-	
+	//Guardamos la Orden del Carrito en la BDD
+	@GetMapping("/saveOrder")
+	public String saveOrder() {
+		Date fechaCreacion = new Date();
+		orden.setFechaCreacion(fechaCreacion);
+		orden.setNumero(ordenService.generarNumeroOrden());
+		
+		//ponemos al usuario loggeado
+		Usuario usuario = usuarioService.findById(1).get();
+		
+		orden.setUsuario(usuario);
+		ordenService.save(orden);  //guardamos la Orden
+		//Ahora guardamos los DETALLES de la Orden. 1.Creo Un Obj DetalleOrden llamado dt y va a leer los datos de la LISTA "detalles" con for
+		for (DetalleOrden dt:detalles) {
+			dt.setOrden(orden);    //pasamos la primera linea de la lista de la Orden
+			detalleOrdenService.save(dt);  //La Guardamos en la BDD
+		}
+		//Limpiamos los detos de la Lista de Detalles y de Orden
+		orden = new Orden();
+		detalles.clear();
+		
+		return "redirect:/"; //volvemos a la HOME de la Web
+		
+	}
 }
 	
