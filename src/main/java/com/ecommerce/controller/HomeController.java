@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.management.AttributeValueExp;
 
@@ -191,6 +192,17 @@ public class HomeController {
 		
 		return "redirect:/"; //volvemos a la HOME de la Web
 		
+	}
+	
+	//Funcionalidad BUSCAR
+	@PostMapping("/search")
+	public String searchProduct(@RequestParam String nombre, Model model) {
+		log.info("Nombre del Plan: {}", nombre);  //imprimo el nombre del Prod en Consola si quisiera verificarle q lo toma
+		//filtro el Texto de BUSCAR,todos los Prod como Stream, con funcion anonima de flecha p- variable q recorrera la lista y p tendra el nombre de c/Prod 
+		List<Producto> productos = productoService.findAll().stream().filter(p -> p.getNombre().contains(nombre)).collect(Collectors.toList()); //Colecto todo en Lista  
+		//Ahora lo paso a la Vista con model... usando la Implementacion
+		model.addAttribute("productos", productos);
+		return "usuario/home";
 	}
 }
 	

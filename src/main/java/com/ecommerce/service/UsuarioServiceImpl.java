@@ -19,5 +19,11 @@ public class UsuarioServiceImpl implements IUsuarioService{
 		// Me retorna un Usuario de Tipo OPTIONAL
 		return usuarioRepository.findById(id);
 	}
+
+	@Override
+	public Usuario save(Usuario usuario) {
+		//guarda en la BDD
+		return usuarioRepository.save(usuario);
+	}
 	
 }
