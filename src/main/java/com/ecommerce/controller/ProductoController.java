@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.model.Producto;
 import com.ecommerce.model.Usuario;
+import com.ecommerce.service.IUsuarioService;
 import com.ecommerce.service.ProductoService;
 import com.ecommerce.service.UploadFileService;
 
@@ -26,14 +27,15 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/productos")
 public class ProductoController {
 	
-	//Creo la variable Logger para hacer pruebas de grabar Producto desde el Backend
-	private final Logger LOGGER = LoggerFactory.getLogger(ProductoController.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(ProductoController.class);  //uso para imprimir en Consola
 	
-	//Creo la variable para acceder a todos los metodos CRUDs
+	//Autowired -Lo inyecta a la Clase Producto
 	@Autowired
-	private ProductoService productoService;
+	private ProductoService productoService;  //accede a los CRUDs
 	
-	//Creo un Obj tipo upload, q la inyectaremos con Autowired a la Clase Producto
+	@Autowired
+	private IUsuarioService usuarioService; //accede al ID loggueado
+	
 	@Autowired
 	private UploadFileService upload;
 	
@@ -56,8 +58,8 @@ public class ProductoController {
 		//primero hago el test en consola
 		LOGGER.info("Este es el objeto producto {}", producto);  //{} Va dentro el Objeto que viene del ToString
 		
-		//Creo un Usuario en SQL... ahora le llamo a ese usuario creando un Objeto q solo indique el ID del que cree en SQL
-		Usuario u = new Usuario(1,"","","","","","",""); 
+		//Llamo al id del usuario loggueado
+		Usuario u = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString() )).get(); 
 		producto.setUsuario(u);
 		
 		//Guardo el nombre de la imagen en la BDD, pero si es cargada por 1era vez (id=1)

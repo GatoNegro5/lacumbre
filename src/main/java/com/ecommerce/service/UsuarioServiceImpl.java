@@ -25,5 +25,10 @@ public class UsuarioServiceImpl implements IUsuarioService{
 		//guarda en la BDD
 		return usuarioRepository.save(usuario);
 	}
+
+	@Override
+	public Optional<Usuario> findByEmail(String email) {		
+		return usuarioRepository.findByEmail(email);  //implementado el Metodo findByEmail
+	}
 	
 }

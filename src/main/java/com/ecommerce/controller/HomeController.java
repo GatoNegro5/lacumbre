@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.management.AttributeValueExp;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,8 @@ import com.ecommerce.service.IDetalleOrdenService;
 import com.ecommerce.service.IOrdenService;
 import com.ecommerce.service.IUsuarioService;
 import com.ecommerce.service.ProductoService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 //Cuando vaya a la Raiz del Proyecto, este controlador me va a Mapear los metodos que esten aqui  (BACKEND)
@@ -56,8 +56,9 @@ public class HomeController {
 	Orden orden = new Orden(); // Importo el Model para q no de error
 
 	@GetMapping("")
-	public String home(Model model) { // Model lleva al informacion de los Prod a la Vista
-
+	public String home(Model model, HttpSession session) { // Model lleva al informacion de los Prod a la Vista
+		
+		log.info("Sesion del Uusario: {}", session.getAttribute("idusuario"));  //Pruebo en Consola q el id del Usuario ingresado este ahi
 		model.addAttribute("productos", productoService.findAll());
 		return "usuario/home";
 	}
@@ -157,9 +158,9 @@ public class HomeController {
 	
 	//Activamos el Boton: VER ORDEN del Carrito
 	@GetMapping("/order")
-	public String order(Model model) {
-		
-		Usuario usuario = usuarioService.findById(1).get();   //Tomo 1 de la BDD hasta q agreguemos el ingreso de Usuarios... uso get para q retorne el Optional
+	public String order(Model model, HttpSession session) {
+		//ponemos al usuario loggeado
+		Usuario usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();   //Uso get para q retorne del Optional
 		model.addAttribute("usuario", usuario); //Traigo el Atributo Usuario a traves del Model
 		
 		model.addAttribute("cart", detalles);  //detalles del Prod escogidos
@@ -171,13 +172,13 @@ public class HomeController {
 		
 	//Guardamos la Orden del Carrito en la BDD
 	@GetMapping("/saveOrder")
-	public String saveOrder() {
+	public String saveOrder(HttpSession session) {
 		Date fechaCreacion = new Date();
 		orden.setFechaCreacion(fechaCreacion);
 		orden.setNumero(ordenService.generarNumeroOrden());
 		
 		//ponemos al usuario loggeado
-		Usuario usuario = usuarioService.findById(1).get();
+		Usuario usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();   //Uso get para q retorne del Optional
 		
 		orden.setUsuario(usuario);
 		ordenService.save(orden);  //guardamos la Orden

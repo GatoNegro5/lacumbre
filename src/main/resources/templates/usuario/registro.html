@@ -10,11 +10,11 @@
 
   <title>LaCumbre - Registro de Usuario</title>
      
-         <!-- Bootstrap core CSS - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
-         <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+  <!-- Bootstrap core CSS - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
+  <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
 
-         <!-- Custom styles for this template - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
-         <link th:href="@{/css/heroic-features.css}" rel="stylesheet">
+  <!-- Custom styles for this template - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
+  <link th:href="@{/css/heroic-features.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -32,7 +32,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="login.html">Login</a>
+            <a class="nav-link" th:href="@{/usuario/login}">Login</a>
           </li>
         </ul>
       </div>    
