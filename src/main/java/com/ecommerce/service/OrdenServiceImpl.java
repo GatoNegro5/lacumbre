@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.model.Orden;
+import com.ecommerce.model.Usuario;
 import com.ecommerce.repository.IOrdenRepository;
 
 @Service
 public class OrdenServiceImpl implements IOrdenService {
 
-	//Autowired le indica q debe inyectar este Obj a esta Clase de Servicios
+	//Autowired indica q lo q sigue se inyecte esta Clase
 	@Autowired
 	private IOrdenRepository ordenRepository;  //en este Objeto almacenaremos los CRUDs
 	
@@ -51,5 +52,10 @@ public class OrdenServiceImpl implements IOrdenService {
 		}		
 		
 		return numeroConcatenado;
+	}
+
+	@Override
+	public List<Orden> findByUsuario(Usuario usuario) {
+		return ordenRepository.findByUsuario(usuario);
 	}
 }

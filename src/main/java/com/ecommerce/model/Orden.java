@@ -31,7 +31,7 @@ public class Orden {
 	
 	//Contructor Vacio
 	public Orden() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	//Contructor Lleno

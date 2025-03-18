@@ -1,5 +1,6 @@
 package com.ecommerce.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.ecommerce.model.Orden;
 import com.ecommerce.model.Usuario;
+import com.ecommerce.service.IOrdenService;
 import com.ecommerce.service.IUsuarioService;
 
 import jakarta.servlet.http.HttpSession;
@@ -23,7 +26,10 @@ public class UsuarioController {
 	private final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
 	
 	@Autowired
-	private IUsuarioService usuarioService;  //Esto me permitira Inyectar a este Controlador las operaciones CRUD desde UsuarioServiceImpl.java
+	private IUsuarioService usuarioService;  //Esto Controla las operaciones CRUD del UsuarioServiceImpl.java
+	
+	@Autowired
+	private IOrdenService ordenService;  //Para controlar las Ordenes q se vera segun si el Usuario se ha logueado o no
 	
 	//accedemos a una nueva Web /usuario/registro mediante GetMapping
 	@GetMapping("/registro")
@@ -72,6 +78,13 @@ public class UsuarioController {
 	@GetMapping("/compras")
 	public String obtenerCompras(Model model, HttpSession session) {			
 		model.addAttribute("sesion", session.getAttribute("idusuario"));
+		//Hago una busqueda con el Obj usuarioService creado arriba del id del Usuario para pasarlo a la busqueda de Ordenes
+		Usuario usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
+		List<Orden> ordenes = ordenService.findByUsuario(usuario);   //Listo las Ordenes del Usuario Logueado llamando al Metodo implementado de la Clase OrdenServiceImpl
+		
+		
+		//Ahora le vamos a pasar a la Vista de compras.html, una Lista llamada "ordenes" 
+		model.addAttribute("ordenes", ordenes);
 		return "usuario/compras";
 	}
 	
