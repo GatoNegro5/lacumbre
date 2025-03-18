@@ -60,6 +60,10 @@ public class HomeController {
 		
 		log.info("Sesion del Uusario: {}", session.getAttribute("idusuario"));  //Pruebo en Consola q el id del Usuario ingresado este ahi
 		model.addAttribute("productos", productoService.findAll());
+		
+		//Creo una variable q almacena al Usuario Logueado o null de Sesion para determinar si le mostramos un Header o Header-USER
+		model.addAttribute("sesion", session.getAttribute("idusuario"));
+		
 		return "usuario/home";
 	}
 
@@ -148,10 +152,13 @@ public class HomeController {
 
 	//Activamos la Opcion CARRITO del Menu de la Pagina
 	@GetMapping("/getCart")
-	public String getCart(Model model) {
+	public String getCart(Model model, HttpSession session) {
 		//detalles(Lista de Productos) orden(valor a pagar) son Globales y sobreviven a toda la ejecucion de la aplicacion, solo paso la Inf a la VISTA del Carrito con Model
 		model.addAttribute("cart", detalles);
 		model.addAttribute("orden", orden);
+		
+		//Creo la variable sesion que almacena el usuario Logueado o null
+		model.addAttribute("sesion", session.getAttribute("idusuario"));
 		
 		return "usuario/carrito";
 	}

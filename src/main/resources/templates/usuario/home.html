@@ -7,9 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <!--USUARIO-->
-  <title>LaCumbre Interfaz</title>
- 
+  
+  <title>LaCumbre</title> 
 
     <!-- Bootstrap core CSS - ojo agrega th: y @{ } para indicar q esta en thymeleaf-->
     <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
@@ -21,10 +20,12 @@
 
 <body>
 
-  <!-- Navigation - Aqui pondremos el HEADER de Template_usuario.html-->
-  <div th:include="usuario/template_usuario.html::header">	
-  </div>
+	<!-- Navigation - evaluando la variable sesion NO Logueada-->
+	<div th:include="usuario/template_usuario.html::header" th:if="${sesion==null}"></div>
 
+	<!-- Navigation - evaluamos la variable "sesion" con un usuario Logueado-->
+	<div th:include="usuario/template_usuario.html::header-user" th:unless="${sesion==null}"></div>
+	
     <!-- Page Content -->
     <div class="container">
 
