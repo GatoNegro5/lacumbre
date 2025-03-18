@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -88,5 +89,16 @@ public class UsuarioController {
 		return "usuario/compras";
 	}
 	
-	
+	@GetMapping("/detalle/{id}")
+	public String datalleCompra(@PathVariable Integer id, Model model, HttpSession session) {	//La Notacion PathVariable mapea el parametro q viene de la URL
+		logger.info("Id de la orden: {}", id);    //Reviso el id logueado en consola
+		Optional<Orden> orden = ordenService.findById(id);  //Creo el Obj con la Orden de un usuario con id
+		
+		//JPA trae la Orden junto a los detalles, y con Model manda a la vista
+		model.addAttribute("detalles", orden.get().getDetalle());
+		
+		//Paso los datos a las Vistas de quien esta en la Session
+		model.addAttribute("sesion", session.getAttribute("idusuario"));  //paso la sesion a la Vista
+		return "usuario/detallecompra";  //va a detallecompra.html
+	}
 }
