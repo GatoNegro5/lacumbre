@@ -101,4 +101,10 @@ public class UsuarioController {
 		model.addAttribute("sesion", session.getAttribute("idusuario"));  //paso la sesion a la Vista
 		return "usuario/detallecompra";  //va a detallecompra.html
 	}
+	
+	@GetMapping("/cerrar")
+	public String cerrarSesion(HttpSession session) {
+		session.removeAttribute("idusuario");
+		return "redirect:/";
+	}
 }
